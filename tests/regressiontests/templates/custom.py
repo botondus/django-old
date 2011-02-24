@@ -1,5 +1,6 @@
 from django import template
 from django.utils.unittest import TestCase
+from django.test import TestCase as DjangoTestCase
 from templatetags import custom
 
 class CustomFilterTests(TestCase):
@@ -52,3 +53,13 @@ class CustomTagTests(TestCase):
         register = template.Library()
         decorator = register.simple_tag(takes_context=True)
         self.assertRaises(template.TemplateSyntaxError, decorator, a_simple_tag_without_parameters)
+
+
+class CustomInclusionTagTests(DjangoTestCase):
+    urls = 'regressiontests.templates.urls'
+    
+    def test_inclusion_tag_with_current_app_in_context(self):
+        response = self.client.get('/inclusion-tag-view/')
+        self.assertEqual(response.status_code, 200)
+        print response
+        self.assertContains(response, '/advanced-admin/')
