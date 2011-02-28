@@ -1143,7 +1143,7 @@ class AdminViewStringPrimaryKeyTest(TestCase):
         self.assertContains(response, should_contain)
 
 
-class SecureViewTest(TestCase):
+class SecureViewTests(TestCase):
     fixtures = ['admin-views-users.xml']
 
     def setUp(self):
@@ -1280,6 +1280,25 @@ class SecureViewTest(TestCase):
         self.client.post('/test_admin/admin/secure-view/', self.super_login)
         # make sure the view removes test cookie
         self.assertEqual(self.client.session.test_cookie_worked(), False)
+
+    def test_shortcut_view_only_available_to_staff(self):
+        """
+        Only admin users should be able to use the admin shortcut view.
+        """
+        user_ctype = ContentType.objects.get_for_model(User)
+        user = User.objects.get(username='super')
+        shortcut_url = "/test_admin/admin/r/%s/%s/" % (user_ctype.pk, user.pk)
+        
+        # Not logged in: we should see the login page.
+        response = self.client.get(shortcut_url, follow=False)
+        self.assertTemplateUsed(response, 'admin/login.html')
+        
+        # Logged in? Redirect.
+        self.client.login(username='super', password='secret')
+        response = self.client.get(shortcut_url, follow=False)
+        # Can't use self.assertRedirects() because User.get_absolute_url() is silly.
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['Location'], 'http://example.com/users/super/')
 
 class AdminViewUnicodeTest(TestCase):
     fixtures = ['admin-views-unicode.xml']
@@ -1674,6 +1693,16 @@ class AdminSearchTest(TestCase):
         response = self.client.get('/test_admin/admin/admin_views/recommendation/?q=bar')
         # confirm the search returned 1 object
         self.assertContains(response, "\n1 recommendation\n")
+
+    def test_with_fk_to_field(self):
+        """Ensure that the to_field GET parameter is preserved when a search
+        is performed. Refs #10918.
+        """
+        from django.contrib.admin.views.main import TO_FIELD_VAR
+        response = self.client.get('/test_admin/admin/auth/user/?q=joe&%s=username' % TO_FIELD_VAR)
+        self.assertContains(response, "\n1 user\n")
+        self.assertContains(response, '<input type="hidden" name="t" value="username"/>')
+
 
 class AdminInheritedInlinesTest(TestCase):
     fixtures = ['admin-views-users.xml',]
@@ -2872,3 +2901,4 @@ class DateHierarchyTests(TestCase):
             self.assert_non_localized_year(response, 2000)
             self.assert_non_localized_year(response, 2003)
             self.assert_non_localized_year(response, 2005)
+
