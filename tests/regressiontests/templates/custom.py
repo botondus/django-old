@@ -61,5 +61,4 @@ class CustomInclusionTagTests(DjangoTestCase):
     def test_inclusion_tag_with_current_app_in_context(self):
         response = self.client.get('/inclusion-tag-view/')
         self.assertEqual(response.status_code, 200)
-        print response
         self.assertContains(response, '/advanced-admin/')

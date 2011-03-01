@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     url(ur'^Юникод/(\w+)/$', views.client2, name=u"метка_оператора"),
     url(ur'^Юникод/(?P<tag>\S+)/$', 'regressiontests.templates.views.client2', name=u"метка_оператора_2"),
     
-    #
+    # we need 2 instances of same app for testing with inclusion tag
     (r'^basic-admin/', include(basic_site.urls, app_name='basic')),
     (r'^advanced-admin/', include(advanced_site.urls, app_name='advanced')),
     (r'^inclusion-tag-view/$', views.use_inclusion_tag),
