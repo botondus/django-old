@@ -7,12 +7,10 @@ import mimetypes
 import os
 import posixpath
 import re
-import stat
 import urllib
 
-from django.template import loader
 from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseNotModified
-from django.template import Template, Context, TemplateDoesNotExist
+from django.template import loader, Template, Context, TemplateDoesNotExist
 from django.utils.http import http_date, parse_http_date
 
 def serve(request, path, document_root=None, show_indexes=False):
@@ -56,12 +54,11 @@ def serve(request, path, document_root=None, show_indexes=False):
     mimetype, encoding = mimetypes.guess_type(fullpath)
     mimetype = mimetype or 'application/octet-stream'
     if not was_modified_since(request.META.get('HTTP_IF_MODIFIED_SINCE'),
-                              statobj[stat.ST_MTIME], statobj[stat.ST_SIZE]):
+                              statobj.st_mtime, statobj.st_size):
         return HttpResponseNotModified(mimetype=mimetype)
-    contents = open(fullpath, 'rb').read()
-    response = HttpResponse(contents, mimetype=mimetype)
-    response["Last-Modified"] = http_date(statobj[stat.ST_MTIME])
-    response["Content-Length"] = len(contents)
+    response = HttpResponse(open(fullpath, 'rb').read(), mimetype=mimetype)
+    response["Last-Modified"] = http_date(statobj.st_mtime)
+    response["Content-Length"] = statobj.st_size
     if encoding:
         response["Content-Encoding"] = encoding
     return response
