@@ -58,10 +58,14 @@ class CustomTagTests(TestCase):
 class CustomInclusionTagTests(DjangoTestCase):
     urls = 'regressiontests.templates.admin_urls'
     
-    def test_inclusion_tag_with_current_app_in_context(self):
+    def test_15070(self):
         '''
-        Refs #15070
+        Test that inclusion tag passes down `current_app` of context to the
+        Context of the included/rendered template as well.
         '''
-        response = self.client.get('/inclusion-tag-view/')
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, '/advanced-admin/')
+        c = template.Context({})
+        t = template.Template('{% load custom %}{% inclusion_tag_no_params %}')
+        self.assertEquals(t.render(c), u'/basic-admin/')
+        
+        c.current_app = 'advanced'
+        self.assertEquals(t.render(c), u'/advanced-admin/')
