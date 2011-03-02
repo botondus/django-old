@@ -53,9 +53,6 @@ class CustomTagTests(TestCase):
         decorator = register.simple_tag(takes_context=True)
         self.assertRaises(template.TemplateSyntaxError, decorator, a_simple_tag_without_parameters)
 
-
-class CustomInclusionTagTests(TestCase):
-    
     def test_15070(self):
         '''
         Test that inclusion tag passes down `current_app` of context to the
