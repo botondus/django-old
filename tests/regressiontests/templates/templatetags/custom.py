@@ -39,6 +39,10 @@ def params_and_context(context, arg):
     return "params_and_context - Expected result (context value: %s): %s" % (context['value'], arg)
 params_and_context.anything = "Expected params_and_context __dict__"
 
+@register.simple_tag(takes_context=True)
+def current_app(context):
+    return "%s" % context.current_app
+
 @register.inclusion_tag('test_incl_tag.html', takes_context=True)
 def inclusion_tag_no_params(context):
     return {}

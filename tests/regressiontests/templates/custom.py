@@ -65,7 +65,7 @@ class CustomInclusionTagTests(DjangoTestCase):
         '''
         c = template.Context({})
         t = template.Template('{% load custom %}{% inclusion_tag_no_params %}')
-        self.assertEquals(t.render(c), u'/basic-admin/')
+        self.assertEquals(t.render(c), u'None')
         
         c.current_app = 'advanced'
-        self.assertEquals(t.render(c), u'/advanced-admin/')
+        self.assertEquals(t.render(c), u'advanced')
