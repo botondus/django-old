@@ -56,10 +56,12 @@ class CustomTagTests(TestCase):
 
 
 class CustomInclusionTagTests(DjangoTestCase):
-    urls = 'regressiontests.templates.urls'
+    urls = 'regressiontests.templates.admin_urls'
     
     def test_inclusion_tag_with_current_app_in_context(self):
+        '''
+        Refs #15070
+        '''
         response = self.client.get('/inclusion-tag-view/')
         self.assertEqual(response.status_code, 200)
-        print response
         self.assertContains(response, '/advanced-admin/')

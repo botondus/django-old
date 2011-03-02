@@ -1,7 +1,6 @@
 # coding: utf-8
 from django.conf.urls.defaults import *
 from regressiontests.templates import views
-from regressiontests.templates.admin import basic_site, advanced_site 
 
 urlpatterns = patterns('',
 
@@ -15,9 +14,4 @@ urlpatterns = patterns('',
     # Unicode strings are permitted everywhere.
     url(ur'^Юникод/(\w+)/$', views.client2, name=u"метка_оператора"),
     url(ur'^Юникод/(?P<tag>\S+)/$', 'regressiontests.templates.views.client2', name=u"метка_оператора_2"),
-    
-    #
-    (r'^basic-admin/', include(basic_site.urls, app_name='basic')),
-    (r'^advanced-admin/', include(advanced_site.urls, app_name='advanced')),
-    (r'^inclusion-tag-view/$', views.use_inclusion_tag),
 )
