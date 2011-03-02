@@ -1,6 +1,5 @@
 from django import template
 from django.utils.unittest import TestCase
-from django.test import TestCase as DjangoTestCase
 from templatetags import custom
 
 class CustomFilterTests(TestCase):
@@ -55,8 +54,7 @@ class CustomTagTests(TestCase):
         self.assertRaises(template.TemplateSyntaxError, decorator, a_simple_tag_without_parameters)
 
 
-class CustomInclusionTagTests(DjangoTestCase):
-    urls = 'regressiontests.templates.admin_urls'
+class CustomInclusionTagTests(TestCase):
     
     def test_15070(self):
         '''
