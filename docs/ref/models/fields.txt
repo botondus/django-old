@@ -357,6 +357,11 @@ If you need to accept :attr:`~Field.null` values then use
     would return their data as ``ints``, instead of true ``bools``.  See the
     release notes for a complete description of the change.
 
+.. versionchanged:: 1.4
+    In previous versions of Django ``BooleanFields`` would have an implicit
+    default value of ``False``. Now it defaults to ``None`` if there is
+    no default specified.
+
 ``CharField``
 -------------
 

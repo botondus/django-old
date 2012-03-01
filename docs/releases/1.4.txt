@@ -1042,6 +1042,12 @@ The internals of the tag aren't part of the official stable API, but in the
 interests of full disclosure, the ``ExtendsNode.__init__`` definition has
 changed which may break any custom tags that use this node class.
 
+``BooleanField`` set to None when default value not specified
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In previous versions of Django, a model's ``BooleanField`` would get ``False``
+value when no default was provided. Now ``None`` value is used.
+
 Features deprecated in 1.4
 ==========================
 

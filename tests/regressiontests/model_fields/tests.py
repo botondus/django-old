@@ -211,6 +211,13 @@ class BooleanFieldTests(unittest.TestCase):
             select={'string_length': 'LENGTH(string)'})[0]
         self.assertFalse(isinstance(b5.pk, bool))
 
+    def test_null_default(self):
+        # http://code.djangoproject.com/ticket/15124
+        from django.db import IntegrityError
+        b = BooleanModel()
+        self.assertEqual(b.bfield, None)
+        self.assertRaises(IntegrityError, b.save)
+
 class ChoicesTests(test.TestCase):
     def test_choices_and_field_display(self):
         """
